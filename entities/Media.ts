@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
+@Index("post_id", ["postId"], {})
 @Entity("media", { schema: "reddit" })
 export class Media {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
@@ -10,6 +11,9 @@ export class Media {
 
   @Column("enum", { name: "type", enum: ["video", "image"] })
   type: "video" | "image";
+
+  @Column("int", { name: "post_id" })
+  postId: number;
 
   @Column("datetime", {
     name: "created_at",

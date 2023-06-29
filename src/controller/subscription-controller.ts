@@ -1,8 +1,8 @@
-import { Subscription } from "../entity/Subscription";
+import { Subscription } from "../../entities/Subscription";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { User } from '../entity/User';
-import { Topic } from "../entity/Topic";
+import { User } from '../../entities/User';
+import { Topic } from "../../entities/Topic";
 
 
 export async function getAll(req: Request, res: Response) {
@@ -46,13 +46,13 @@ export async function addSubscription(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ status: "404", message: "User not found" });
         }
-        newsubscription.user = user;
+        newsubscription.userId = user_id;
 
         const topic = await topicRepository.findOneBy({ id: topic_id });
         if (!topic) {
             return res.status(404).json({ status: "404", message: "Topic is not found" });
         }
-        newsubscription.topic = topic;
+        newsubscription.topicId = topic_id;
 
         const savedSubscrib = await subscriptionRepository.save(newsubscription);
 

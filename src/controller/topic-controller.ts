@@ -1,4 +1,4 @@
-import { Topic } from "../entity/Topic";
+import { Topic } from "../../entities/Topic";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
 

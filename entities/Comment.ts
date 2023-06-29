@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("FK_bbfe153fa60aa06483ed35ff4a7", ["userId"], {})
 @Index("FK_8aa21186314ce53c5b61a0e8c93", ["postId"], {})
+@Index("FK_bbfe153fa60aa06483ed35ff4a7", ["userId"], {})
 @Entity("comment", { schema: "reddit" })
 export class Comment {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })

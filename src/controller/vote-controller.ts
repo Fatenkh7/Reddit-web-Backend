@@ -1,9 +1,9 @@
-import { Vote } from "../entity/Vote";
+import { Vote } from "../../entities/Vote";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { User } from '../entity/User';
-import { Post } from "../entity/Post";
-import { Comment } from "../entity/Comment";
+import { User } from '../../entities/User';
+import { Post } from "../../entities/Post";
+import { Comment } from "../../entities/Comment";
 
 
 export async function getAll(req: Request, res: Response) {
@@ -49,19 +49,19 @@ export async function addVote(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ status: "404", message: "User not found" });
         }
-        newVote.user = user;
+        newVote.userId = user_id;
 
         const post = await postRepository.findOneBy({ id: post_id });
         if (!post) {
             return res.status(404).json({ status: "404", message: "Post not found" });
         }
-        newVote.post = post;
+        newVote.postId = post_id;
 
         const comment = await commentRepository.findOneBy({ id: comment_id });
         if (!comment) {
             return res.status(404).json({ status: "404", message: "comment not found" });
         }
-        newVote.comment = comment;
+        newVote.commentId = comment_id;
 
         const savedVote = await voteRepository.save(newVote);
 

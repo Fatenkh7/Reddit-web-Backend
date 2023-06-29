@@ -1,4 +1,4 @@
-import { User } from "../entity/User";
+import { User } from "../../entities/User";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
 import { hash } from 'bcrypt';
@@ -37,8 +37,8 @@ export async function getById(req: Request, res: Response) {
 }
 
 export async function addUser(req: Request, res: Response) {
-    const { email, password, first_name, last_name, age, phone } = req.body;
-    const profile_url: string | null = req.files['profile_url'] ? req.files['profile_url'][0].path : null;
+    const { email, password, firstName, lastName, age, phone } = req.body;
+    const profileUrl: string | null = req.files['profileUrl'] ? req.files['profileUrl'][0].path : null;
 
     // Check if email already exists
     const userRepository = AppDataSource.getRepository(User);
@@ -54,11 +54,11 @@ export async function addUser(req: Request, res: Response) {
     const user = new User();
     user.email = email;
     user.password = await hash(password, 10);
-    user.first_name = first_name;
-    user.last_name = last_name;
+    user.firstName = firstName;
+    user.lastName = lastName;
     user.age = age;
     user.phone = phone;
-    user.profile_url = profile_url;
+    user.profileUrl = profileUrl;
 
     // Validate user
     const errors = await validate(user);
@@ -68,12 +68,12 @@ export async function addUser(req: Request, res: Response) {
 
     try {
         const result = await userRepository.save(user);
-        console.log(profile_url, "prof")
+        console.log(profileUrl, "prof")
         console.log(result, "user")
 
         // Delete previous image if it exists
-        if (existingUser && existingUser.profile_url) {
-            const imagePath = `upload/${existingUser.profile_url}`;
+        if (existingUser && existingUser.profileUrl) {
+            const imagePath = `upload/${existingUser.profileUrl}`;
             fs.unlinkSync(imagePath);
         }
 
@@ -86,7 +86,7 @@ export async function addUser(req: Request, res: Response) {
 
 export async function editById(req: Request, res: Response) {
     let { id } = req.params;
-    let profile_url: any = req.files['profile_url'] ? req.files['profile_url'][0].path : null;
+    let profileUrl: any = req.files['profileUrl'] ? req.files['profileUrl'][0].path : null;
 
     try {
         const userRepository = AppDataSource.getRepository(User);
@@ -97,8 +97,8 @@ export async function editById(req: Request, res: Response) {
         }
 
         // Delete previous image file
-        if (profile_url && user.profile_url) {
-            const filePath = user.profile_url.replace(/\\/g, '/'); // Replace backslashes with forward slashes
+        if (profileUrl && user.profileUrl) {
+            const filePath = user.profileUrl.replace(/\\/g, '/'); // Replace backslashes with forward slashes
             fs.unlinkSync(filePath);
         }
 
@@ -117,7 +117,7 @@ export async function editById(req: Request, res: Response) {
 
 export async function deleteById(req: Request, res: Response) {
     const { id } = req.params;
-    const profile_url = req.files['profile_url'] ? req.files['profile_url'][0].path : null;
+    const profileUrl = req.files['profileUrl'] ? req.files['profileUrl'][0].path : null;
 
     try {
         const userRepository = AppDataSource.getRepository(User);
@@ -133,8 +133,8 @@ export async function deleteById(req: Request, res: Response) {
             return res.status(402).json({ status: "402", message: "Delete user failed" });
         } else {
             // Delete user profile image if it exists
-            if (profile_url) {
-                fs.unlink(profile_url, (err) => {
+            if (profileUrl) {
+                fs.unlink(profileUrl, (err) => {
                     if (err) {
                         console.error('Error deleting user profile image:', err);
                     }

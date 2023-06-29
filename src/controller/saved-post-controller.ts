@@ -1,8 +1,8 @@
-import { SavedPost } from "../entity/Saved-Post";
+import { SavedPost } from "../../entities/SavedPost";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { User } from '../entity/User';
-import { Post } from "../entity/Post";
+import { User } from '../../entities/User';
+import { Post } from "../../entities/Post";
 
 
 export async function getAll(req: Request, res: Response) {
@@ -46,13 +46,13 @@ export async function addSavedPost(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ status: "404", message: "User not found" });
         }
-        newSavedPost.user = user;
+        newSavedPost.userId = user_id;
 
         const post = await postRepository.findOneBy({ id: post_id });
         if (!post) {
             return res.status(404).json({ status: "404", message: "Post not found" });
         }
-        newSavedPost.post = post;
+        newSavedPost.postId = post_id;
 
         const savedPost = await savedPostRepository.save(newSavedPost);
 

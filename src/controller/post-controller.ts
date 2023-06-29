@@ -1,8 +1,7 @@
-import { Post } from "../entity/Post";
+import { Post } from "../../entities/Post";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { User } from '../entity/User';
-import { Media } from "../entity/Media";
+import { User } from '../../entities/User';
 
 
 export async function getAll(req: Request, res: Response) {
@@ -38,7 +37,6 @@ export async function addPost(req: Request, res: Response) {
     try {
         const postRepository = AppDataSource.getRepository(Post);
         const userRepository = AppDataSource.getRepository(User);
-        const mediaRepository = AppDataSource.getRepository(Media);
 
         const post = new Post();
         post.title = title;
@@ -48,13 +46,7 @@ export async function addPost(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ status: "404", message: "User not found" });
         }
-        post.user = user;
-
-        const media = await mediaRepository.findOneBy({ id: media_id });
-        if (!media) {
-            return res.status(404).json({ status: "404", message: "Media not found" });
-        }
-        post.media = media;
+        post.userId = user_id;
 
         const savedPost = await postRepository.save(post);
 

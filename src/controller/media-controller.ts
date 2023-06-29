@@ -1,4 +1,4 @@
-import { Media } from "../entity/Media";
+import { Media } from "../../entities/Media";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
 import fs from 'fs';
@@ -37,13 +37,14 @@ export async function getById(req: Request, res: Response) {
 
 export async function addMedia(req: Request, res: Response) {
     try {
-        const { type } = req.body;
+        const { type, postId } = req.body;
         const { path } = req.files['path'][0];
 
         const mediaRepository = AppDataSource.getRepository(Media);
 
         const media = new Media();
         media.type = type;
+        media.postId = postId;
         media.path = path;
 
         const savedMedia = await mediaRepository.save(media);

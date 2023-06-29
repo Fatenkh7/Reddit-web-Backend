@@ -1,8 +1,8 @@
-import { Comment } from "../entity/Comment";
+import { Comment } from "../../entities/Comment";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { User } from '../entity/User';
-import { Post } from "../entity/Post";
+import { User } from '../../entities/User';
+import { Post } from "../../entities/Post";
 
 
 export async function getAll(req: Request, res: Response) {
@@ -47,13 +47,13 @@ export async function addComment(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ status: "404", message: "User not found" });
         }
-        newComment.user = user;
+        newComment.userId = user_id;
 
         const post = await postRepository.findOneBy({ id: post_id });
         if (!post) {
             return res.status(404).json({ status: "404", message: "Post not found" });
         }
-        newComment.post = post;
+        newComment.postId = post_id;
 
         const savedComment = await commentRepository.save(newComment);
 
